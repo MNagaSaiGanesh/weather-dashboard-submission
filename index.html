@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard - Interactive Map & Timeline</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Ant Design CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/antd@5.12.8/dist/reset.css" />
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header with Timeline -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>Weather Dashboard</h1>
+                <div class="timeline-container">
+                    <div class="timeline-label">
+                        <span>Timeline Control</span>
+                        <div class="timeline-mode-toggle">
+                            <button id="singleModeBtn" class="btn btn--sm mode-btn active">Single Hour</button>
+                            <button id="rangeModeBtn" class="btn btn--sm mode-btn">Time Range</button>
+                        </div>
+                    </div>
+                    <div class="timeline-slider-wrapper">
+                        <div class="timeline-track" id="timelineTrack">
+                            <div class="timeline-range" id="timelineRange"></div>
+                            <div class="timeline-handle primary" id="primaryHandle"></div>
+                            <div class="timeline-handle secondary hidden" id="secondaryHandle"></div>
+                        </div>
+                        <div class="timeline-labels">
+                            <span id="startLabel" class="timeline-date-label"></span>
+                            <span id="endLabel" class="timeline-date-label"></span>
+                        </div>
+                    </div>
+                    <div class="selected-time-display">
+                        <div id="selectedTimeDisplay" class="selected-time">
+                            <span class="time-icon">📅</span>
+                            <span id="selectedTimeText">Select a time</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Content -->
+        <main class="dashboard-main">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <h3>Data Sources & Controls</h3>
+                    <button id="sidebarToggle" class="btn btn--sm btn--outline">
+                        <span>⚙️</span>
+                    </button>
+                </div>
+                
+                <div class="sidebar-content">
+                    <!-- Polygon Controls -->
+                    <div class="control-section">
+                        <h4>Polygon Drawing</h4>
+                        <div class="polygon-controls">
+                            <button id="startDrawingBtn" class="btn btn--primary btn--full-width">
+                                <span>🖊️</span> Start Drawing
+                            </button>
+                            <button id="cancelDrawingBtn" class="btn btn--outline btn--full-width hidden">
+                                <span>❌</span> Cancel Drawing
+                            </button>
+                        </div>
+                        <div class="drawing-instructions hidden" id="drawingInstructions">
+                            <p>Click on the map to add points (3-12 points required)</p>
+                            <p>Double-click to complete polygon</p>
+                        </div>
+                    </div>
+
+                    <!-- Data Source Configuration -->
+                    <div class="control-section">
+                        <h4>Data Source: Temperature</h4>
+                        <div class="data-source-config">
+                            <div class="color-rules">
+                                <div class="color-rule">
+                                    <div class="color-swatch" style="background-color: #ff4d4f;"></div>
+                                    <span class="rule-text">< 10°C (Cold)</span>
+                                </div>
+                                <div class="color-rule">
+                                    <div class="color-swatch" style="background-color: #faad14;"></div>
+                                    <span class="rule-text">10-25°C (Moderate)</span>
+                                </div>
+                                <div class="color-rule">
+                                    <div class="color-swatch" style="background-color: #52c41a;"></div>
+                                    <span class="rule-text">≥ 25°C (Warm)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Polygon List -->
+                    <div class="control-section">
+                        <h4>Created Polygons</h4>
+                        <div id="polygonList" class="polygon-list">
+                            <p class="empty-state">No polygons created yet</p>
+                        </div>
+                    </div>
+
+                    <!-- API Status -->
+                    <div class="control-section">
+                        <h4>API Status</h4>
+                        <div id="apiStatus" class="api-status">
+                            <div class="status status--info">Ready</div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Map Container -->
+            <div class="map-container">
+                <div id="map" class="map"></div>
+                <div class="map-controls">
+                    <button id="centerMapBtn" class="btn btn--outline map-control-btn">
+                        <span>🎯</span> Center Map
+                    </button>
+                </div>
+                <div id="loadingOverlay" class="loading-overlay hidden">
+                    <div class="loading-spinner"></div>
+                    <p>Fetching weather data...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Data Source Selection Modal -->
+    <div id="dataSourceModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Select Data Source</h3>
+                <button id="closeModal" class="btn btn--outline btn--sm">×</button>
+            </div>
+            <div class="modal-body">
+                <p>Choose a data source for this polygon:</p>
+                <div class="data-source-options">
+                    <label class="data-source-option">
+                        <input type="radio" name="dataSource" value="temperature" checked>
+                        <span class="radio-custom"></span>
+                        <span>Temperature (°C)</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="confirmDataSource" class="btn btn--primary">Confirm Selection</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notifications" class="notifications-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
