@@ -7,8 +7,7 @@
 Interactive weather data visualization dashboard with polygon drawing and timeline controls.
 
 ## 🚀 Live Demo
-- **Deployed Application**: [Your Vercel URL]
-- **Repository**: [Your GitHub URL]
+- **Deployed Application**: https://weather-dashboard-submission.vercel.app/
 
 ## 📋 Features
 - ✅ Interactive timeline slider (single hour & range selection)
